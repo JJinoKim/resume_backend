@@ -19,6 +19,7 @@
   "homepage": "https://github.com/JJinoKim/resume_backend#readme",
   "dependencies": {
     "add": "^2.0.6",
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "eslint-config-prettier": "^8.3.0",
     "esm": "^3.2.25",
