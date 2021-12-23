@@ -1,0 +1,26 @@
+{
+  "name": "resume_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JJinoKim/resume_backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JJinoKim/resume_backend/issues"
+  },
+  "homepage": "https://github.com/JJinoKim/resume_backend#readme",
+  "dependencies": {
+    "eslint-config-prettier": "^8.3.0",
+    "koa": "^2.13.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.5.0"
+  }
+}
