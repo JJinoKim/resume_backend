@@ -21,9 +21,9 @@
     "add": "^2.0.6",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
-    "eslint-config-prettier": "^8.3.0",
     "esm": "^3.2.25",
     "joi": "^17.5.0",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.1.1",
@@ -31,7 +31,25 @@
     "nodemon": "^2.0.15"
   },
   "devDependencies": {
-    "eslint": "^8.5.0",
+    "eslint": "^7.16.0",
     "nodemon": "^2.0.6"
+  },
+  "resolutions": {
+    "nopt": "5.0.0",
+    "semver": "7.3.5",
+    "debug": "4.3.3",
+    "ms": "2.1.2",
+    "whatwg-url": "5.0.0",
+    "tr46": "0.0.3",
+    "webidl-conversions": "3.0.1",
+    "depd": "2.0.0",
+    "supports-color": "5.5.0",
+    "glob-parent": "5.1.2",
+    "has-flag": "3.0.0",
+    "ini": "2.0.0",
+    "get-stream": "4.1.0",
+    "lowercase-keys": "1.0.1",
+    "strip-json-comments": "2.0.1",
+    "eslint-visitor-keys": "3.1.0"
   }
 }
