@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 
 const UserSchema = new Schema({
     username : String,
+    userId : String,
     hashedPassword : String,
 });
 
@@ -17,8 +18,8 @@ UserSchema.methods.checkPassword = async function(password){
     return result;
 };
 
-UserSchema.statics.findByUsername = function(username){
-    return this.findOne({username});
+UserSchema.statics.findByUserId = function(userId){
+    return this.findOne({userId});
 };
 
 UserSchema.methods.serialize = function(){
@@ -32,6 +33,7 @@ UserSchema.methods.generateToken = function(){
         {
             _id:this.id,
             username : this.username,
+            userId : this.userId,
         },
         process.env.JWT_SECRET,
         {

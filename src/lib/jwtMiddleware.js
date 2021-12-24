@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { decode } from 'jsonwebtoken';
 import User from '../models/user';
 
 const jwtMiddleware = async (ctx, next) => {
@@ -8,6 +8,7 @@ const jwtMiddleware = async (ctx, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         ctx.state.user = {
             _id : decoded._id,
+            userId : decoded.userId,
             username : decoded.username,
         };
 

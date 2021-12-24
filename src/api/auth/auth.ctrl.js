@@ -4,6 +4,7 @@ import User from '../../models/user';
 export const register = async ctx => {
     // 회원가입
     const schema = Joi.object().keys({
+        userId : Joi.string().alphanum().min(4).max(15).required(),
         username : Joi.string().alphanum().min(3).max(20).required(),
         password : Joi.string().required(),
     });
@@ -13,17 +14,17 @@ export const register = async ctx => {
         ctx.body = result.error;
         return;
     }
-    const {username, password} = ctx.request.body;
+    const {userId, username, password} = ctx.request.body;
     try{
-        //username이 있는지 확인
-        const exists = await User.findByUsername(username);
+        //userId 있는지 확인
+        const exists = await User.findByUserId(userId);
         if(exists){
             ctx.status = 409;
             return;
         }
 
         const user = new User({
-            username,
+            userId,
         });
 
         await user.setPassword(password); // 비밀번호 설정
@@ -44,15 +45,15 @@ export const register = async ctx => {
 
 export const login = async ctx => {
     // 로그인
-    const {username, password} = ctx.request.body;
+    const {userId, username, password} = ctx.request.body;
 
-    if(!username || !password){
+    if(!userId || !password){
         ctx.status = 401;
         return;
     }
 
     try{
-        const user = await User.findByUsername(username);
+        const user = await User.findByUserId(userId);
         // 계정이 존재하지 않으면 에러
         if(!user){
             ctx.status = 401;
@@ -79,7 +80,6 @@ export const login = async ctx => {
 export const check = async ctx => {
     // 로그인 상태 확인
     const {user} = ctx.state;
-    console.log(user);
     if(!user){
         // 로그인 중 아님
         ctx.status = 401;
