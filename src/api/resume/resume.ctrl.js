@@ -62,18 +62,14 @@ export const list = async(ctx) => {
     }
 }
 
-export const write = async (ctx) => {
+export const write = async(ctx) => {
     const schema = Joi.object().keys({
-        user : Joi.object().keys({
-            userId: Joi.string().required(),
-            username: Joi.string().required(),
-        }).required(),
         gender : Joi.string(),  // 성별
         birth : Joi.string(), // 생년월일
         email : Joi.string().required(), // 이메일
         phone_c : Joi.string().required(),   // 휴대폰번호
-        phone_t : Joi.string().required(),   // 전화번호
-        address : object().keys({
+        phone_t : Joi.string(),   // 전화번호
+        address : Joi.object().keys({
             adr1: Joi.string(),
             adr2: Joi.string(),
             adr3: Joi.string(),
@@ -85,7 +81,7 @@ export const write = async (ctx) => {
             doctor: Joi.string(),
         }),
         career : Joi.array()
-            .item(Joi.object().keys({
+            .items(Joi.object().keys({
                 company: Joi.string().required(),
                 period: Joi.string().required(),
                 department: Joi.string().required(),
@@ -93,27 +89,54 @@ export const write = async (ctx) => {
                 etc: Joi.string(),
             })),
         experience : Joi.array()
-            .item(Joi.object().keys({
+            .items(Joi.object().keys({
                 title: Joi.string().required(),
                 agency: Joi.string(),
                 period: Joi.string(),
                 contents: Joi.string(),
             })),
         license : Joi.array()
-            .item(Joi.object().keys({
+            .items(Joi.object().keys({
                 title: Joi.string().required(),
                 date: Joi.string(),
             })),
         award : Joi.array()
-            .item(Joi.object().keys({
+            .items(Joi.object().keys({
                 title: Joi.string().required(),
                 date: Joi.string(),
             })),
         skill : Joi.array()
-            .item(Joi.object().keys({
+            .items(Joi.object().keys({
                 name: Joi.string().required(),
                 level: Joi.string(),
             })),
-        id : String,
+        id : Joi.string(),
     })
+    console.log("sssss")
+    const result = schema.validate(ctx.request.body);
+    console.log(result)
+    if(result.error){
+        ctx.status = 400;
+        ctx.body = result.error;
+        return;
+    }
+    const {gender,birth,email,phone_c,phone_t,address,education,career,experience,license,award,skill,id} = ctx.request.body;
+    const {user} = ctx.state;
+
+    try{
+        const resume = new Resume({
+            user,gender,birth,email,phone_c,phone_t,address,education,career,experience,license,award,skill,id
+        })
+        console.log(resume)
+        await resume.save();
+        ctx.body = resume
+    }catch(e){
+        ctx.throw(500,e);
+    }
 }
+
+
+export const update = async (ctx) => {
+}
+
+
