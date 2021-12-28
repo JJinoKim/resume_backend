@@ -69,6 +69,7 @@ export const list = async ctx => {
     }
 
     const { tag, username } = ctx.query;
+    console.log(page)
     const query = {
         ...(username ? {'user.username' : username} : {}),
         ...(tag ? {tags: tag} : {})

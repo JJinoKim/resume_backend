@@ -1,15 +1,55 @@
-import Mongoose, {Schema} from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
-const { Schema } = mongoose;
 
-const PostSchema = new Schema({
+const ResumeSchema = new Schema({
     user : {
         _id: mongoose.Types.ObjectId,
+        userId: String,
         username: String,
     },
-    gender : char,  // 성별
-    birth : string, // 생년월일
-    email : string, // 이메일
-    phone_c : string,   // 휴대폰번호
-    phone_t : string,   // 전화번호
+    gender : String,  // 성별
+    birth : String, // 생년월일
+    email : String, // 이메일
+    phone_c : String,   // 휴대폰번호
+    phone_t : String,   // 전화번호
+    address : {
+        adr1: String,
+        adr2: String,
+        adr3: String
+    },
+    education : {
+        highSchool: String,
+        university: String,
+        graduate: String,
+        doctor: String,
+    },
+    career : [{
+        company: String,
+        period: String,
+        department: String,
+        position: String,
+        ect: String,
+    }],
+    experience : [{
+        title: String,
+        agency: String,
+        period: String,
+        contents: String,
+    }],
+    license : [{
+        title: String,
+        date: String,
+    }],
+    award : [{
+        title: String,
+        date: String,
+    }],
+    skill : [{
+        name: String,
+        level: String
+    }],
+    id : String,
 })
+
+const Resume = mongoose.model('Resume',ResumeSchema );
+export default Resume;

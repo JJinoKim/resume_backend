@@ -1,6 +1,5 @@
-import mongoose from 'mongoose';
+import mongoose,{ Schema } from 'mongoose';
 
-const { Schema } = mongoose;
 
 const PostSchema = new Schema({
     title: String,
