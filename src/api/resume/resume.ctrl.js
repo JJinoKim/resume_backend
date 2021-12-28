@@ -1,24 +1,18 @@
 import Resume from '../../models/resume';
-import mongoose from 'mongoose';
 import Joi from 'joi';
-import { object } from '../../../node_modules/joi/lib/index';
-
-const { ObjectId } = mongoose.Types;
 
 export const getResumeById = async (ctx, next) => {
-    const {user} = ctx.params;
-    if(!ObjectId.isValid(user)){
-        ctx.status = 400;
-        return;
+    const {id} = ctx.params;
+    const query = {
+        resumeid : id
     }
-
     try{
-        const resume = await Resume.findById(id);
+        const resume = await Resume.find(query);
         if(!resume){
             ctx.status = 404;
             return;
         }
-        ctx.state.resume = resume;
+        ctx.body = resume;
         return next();
     }catch(e){
         ctx.throw(500,e);
@@ -53,17 +47,95 @@ export const list = async(ctx) => {
             .exec();
         const resumeCount = await Resume.countDocuments().exec();
         ctx.set('Last-Page', Math.ceil(resumeCount / 10));
-        ctx.body = resumeList.map(resume => ({
-            ...resume,
-            body: resume.body.length < 200 ? resume.body : `${resume.body.slice(0,200)}...`,
-        }));
+        ctx.body = resumeList;
     }catch(e){
         ctx.throw(500,e);
     }
 }
 
 export const write = async(ctx) => {
-    const schema = Joi.object().keys({
+    const schema = validationSchema();
+    const result = schema.validate(ctx.request.body);
+    if(result.error){
+        ctx.status = 400;
+        ctx.body = result.error;
+        return;
+    }
+    const {gender,birth,email,phone_c,phone_t,address,education,career,experience,license,award,skill,code} = ctx.request.body;
+    const {user} = ctx.state;
+    const resumeid = new Date().getTime()+user.userId;
+
+    try{
+        const resume = new Resume({
+            user,gender,birth,email,phone_c,phone_t,address,education,career,experience,license,award,skill,code,resumeid
+        })
+        console.log(resume)
+        await resume.save();
+        ctx.body = resume
+    }catch(e){
+        ctx.throw(500,e);
+    }
+}
+
+
+export const update = async (ctx) => {
+    const schema = validationSchema();
+    const result = schema.validate(ctx.request.body);
+    if(result.error){
+        ctx.status = 400;
+        ctx.body = result.error;
+        return;
+    }
+    const { _id } = ctx.request.body;
+    console.log(_id)
+    try{
+        const resume = Resume.findByIdAndUpdate(_id, ctx.request.body, {
+            new : true,
+        }).exec();
+        console.log(!resume);
+        if(!resume){
+            ctx.status = 404;
+            return;
+        }
+        ctx.body = '수정완료';
+    }catch(e){
+        console.log(e)
+        ctx.throw(500,e);
+    }
+}
+
+export const remove = async (ctx) => {
+    const {id} = ctx.params;
+    const query = {
+        resumeid : id
+    }
+    try{
+        const resume = await Resume.findOne(query);
+        if(!resume){
+            ctx.status = 404;
+            ctx.body = '지울 데이터가 없음';
+            return;
+        }
+        await Resume.findByIdAndDelete(resume._id);
+        ctx.body = 'success';
+    }catch(e){
+        ctx.throw(500,e);
+    }
+}
+
+export const checkOwnResmue = (ctx, next) => {
+    const {user, resume} = ctx.state;
+    console.log(resume)
+    if (resume.user._id.toString() !== user._id){
+        ctx.status = 403;
+        return;
+    }
+    return next();
+}
+
+
+const validationSchema = () => {
+    return Joi.object().keys({
         gender : Joi.string(),  // 성별
         birth : Joi.string(), // 생년월일
         email : Joi.string().required(), // 이메일
@@ -110,33 +182,8 @@ export const write = async(ctx) => {
                 name: Joi.string().required(),
                 level: Joi.string(),
             })),
-        id : Joi.string(),
+        code : Joi.string(),
+        resumeid : Joi.string(),
+        _id : Joi.string(),
     })
-    console.log("sssss")
-    const result = schema.validate(ctx.request.body);
-    console.log(result)
-    if(result.error){
-        ctx.status = 400;
-        ctx.body = result.error;
-        return;
-    }
-    const {gender,birth,email,phone_c,phone_t,address,education,career,experience,license,award,skill,id} = ctx.request.body;
-    const {user} = ctx.state;
-
-    try{
-        const resume = new Resume({
-            user,gender,birth,email,phone_c,phone_t,address,education,career,experience,license,award,skill,id
-        })
-        console.log(resume)
-        await resume.save();
-        ctx.body = resume
-    }catch(e){
-        ctx.throw(500,e);
-    }
 }
-
-
-export const update = async (ctx) => {
-}
-
-

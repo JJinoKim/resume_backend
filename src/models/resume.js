@@ -48,8 +48,10 @@ const ResumeSchema = new Schema({
         name: String,
         level: String
     }],
-    id : String,
+    code : String,
+    resumeid : String,
 })
+
 
 const Resume = mongoose.model('Resume',ResumeSchema );
 export default Resume;

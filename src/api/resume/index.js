@@ -5,8 +5,9 @@ import checkLoggedIn from '../../lib/checkLoggedIn';
 const resume = new Router();
 
 resume.get('/',resumeCtrl.list);
-resume.post('/write',checkLoggedIn,resumeCtrl.write);
-
-resume.use('/:id', resumeCtrl.getResumeById, resume.routes());
+resume.post('/',checkLoggedIn,resumeCtrl.write);
+resume.patch('/',checkLoggedIn, resumeCtrl.update);
+resume.delete('/:id',checkLoggedIn,resumeCtrl.remove);
+resume.get('/:id', resumeCtrl.getResumeById, resume.routes());
 
 export default resume;
